@@ -15,31 +15,24 @@
 
     fvOptions.constrain(hEqn);
 
-    if (coupled)
+    Info<< "\nSolving for solid region "<< solidRegions[i].name() << endl;
+
+    if (finalIter)
     {
-        fvMatrixAssemblyPtr->addFvMatrix(hEqn);
+        mesh.data().setFinalIteration(true);
     }
-    else
+
+    hEqn.solve(h.select(finalIter));
+
+    fvOptions.correct(h);
+
+    thermo.correct();
+
+    Info<< "Min/max T:" << min(thermo.T()).value() << ' '
+        << max(thermo.T()).value() << endl;
+
+    if (finalIter)
     {
-        Info<< "\nSolving for solid region "<< solidRegions[i].name() << endl;
-
-        if (finalIter)
-        {
-            mesh.data().setFinalIteration(true);
-        }
-
-        hEqn.solve(h.select(finalIter));
-
-        fvOptions.correct(h);
-
-        thermo.correct();
-
-        Info<< "Min/max T:" << min(thermo.T()).value() << ' '
-            << max(thermo.T()).value() << endl;
-
-        if (finalIter)
-        {
-            mesh.data().setFinalIteration(false);
-        }
+        mesh.data().setFinalIteration(false);
     }
 }

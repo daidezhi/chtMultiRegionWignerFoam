@@ -7,6 +7,7 @@
 -------------------------------------------------------------------------------
     Copyright (C) 2011-2016 OpenFOAM Foundation
     Copyright (C) 2017-2019,2022 OpenCFD Ltd.
+    Copyright (C) 2025 Dezhi Dai, Argonne National Laboratory (ANL)
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -25,10 +26,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    chtMultiRegionFoam
-
-Group
-    grpHeatTransferSolvers
+    chtMultiRegionWignerFoam
 
 Description
     Transient solver for buoyant, turbulent fluid flow and solid heat
@@ -82,8 +80,6 @@ int main(int argc, char *argv[])
     #include "solidRegionDiffusionNo.H"
     #include "setInitialMultiRegionDeltaT.H"
 
-    #include "createCoupledRegions.H"
-
     while (runTime.run())
     {
         #include "readTimeControls.H"
@@ -127,87 +123,6 @@ int main(int argc, char *argv[])
                 #include "readSolidMultiRegionPIMPLEControls.H"
                 #include "setRegionSolidFields.H"
                 #include "solveSolid.H"
-            }
-
-            if (coupled)
-            {
-                Info<< "\nSolving energy coupled regions " << endl;
-                fvMatrixAssemblyPtr->solve();
-                #include "correctThermos.H"
-
-                forAll(fluidRegions, i)
-                {
-                    fvMesh& mesh = fluidRegions[i];
-
-                    #include "readFluidMultiRegionPIMPLEControls.H"
-                    #include "setRegionFluidFields.H"
-                    if (!frozenFlow)
-                    {
-                        Info<< "\nSolving for fluid region "
-                            << fluidRegions[i].name() << endl;
-                        // --- PISO loop
-                        for (int corr=0; corr<nCorr; corr++)
-                        {
-                            #include "pEqn.H"
-                        }
-                        turbulence.correct();
-                    }
-
-                    rho = thermo.rho();
-                    Info<< "Min/max T:" << min(thermo.T()).value() << ' '
-                        << max(thermo.T()).value() << endl;
-                }
-
-                fvMatrixAssemblyPtr->clear();
-            }
-
-            // Additional loops for energy solution only
-            if (!oCorr && nOuterCorr > 1)
-            {
-                loopControl looping(runTime, pimple, "energyCoupling");
-
-                while (looping.loop())
-                {
-                    Info<< nl << looping << nl;
-
-                    forAll(fluidRegions, i)
-                    {
-                        fvMesh& mesh = fluidRegions[i];
-
-                        Info<< "\nSolving for fluid region "
-                            << fluidRegions[i].name() << endl;
-                        #include "readFluidMultiRegionPIMPLEControls.H"
-                        #include "setRegionFluidFields.H"
-                        frozenFlow = true;
-                        #include "solveFluid.H"
-                    }
-
-                    forAll(solidRegions, i)
-                    {
-                        fvMesh& mesh = solidRegions[i];
-
-                        Info<< "\nSolving for solid region "
-                            << solidRegions[i].name() << endl;
-                        #include "readSolidMultiRegionPIMPLEControls.H"
-                        #include "setRegionSolidFields.H"
-                        #include "solveSolid.H"
-                    }
-
-                    if (coupled)
-                    {
-                        Info<< "\nSolving energy coupled regions " << endl;
-                        fvMatrixAssemblyPtr->solve();
-                        #include "correctThermos.H"
-
-                        forAll(fluidRegions, i)
-                        {
-                            #include "setRegionFluidFields.H"
-                            rho = thermo.rho();
-                        }
-
-                        fvMatrixAssemblyPtr->clear();
-                    }
-                }
             }
         }
 
