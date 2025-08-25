@@ -34,3 +34,6 @@ volScalarField& h = thermo.he();
 const volScalarField& betav = betavSolid[i];
 
 fv::options& fvOptions = solidHeatSources[i];
+
+
+Wigner::wignerEnergyRelease& wignerEnergy = wignerEnergyReleases[i];

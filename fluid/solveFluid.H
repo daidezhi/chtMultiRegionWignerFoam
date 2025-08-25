@@ -1,3 +1,5 @@
+Info<< "Solving for fluid region " << fluidRegions[i].name() << nl << endl;
+
 if (finalIter)
 {
     mesh.data().setFinalIteration(true);
@@ -17,8 +19,6 @@ else
     #include "UEqn.H"
     #include "YEqn.H"
     #include "EEqn.H"
-
-    Info<< "\nSolving for fluid region " << fluidRegions[i].name() << endl;
 
     // --- PISO loop
     for (int corr=0; corr<nCorr; corr++)

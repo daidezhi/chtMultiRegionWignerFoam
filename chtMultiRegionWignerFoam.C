@@ -30,10 +30,8 @@ Application
 
 Description
     Transient solver for buoyant, turbulent fluid flow and solid heat
-    conduction with conjugate heat transfer between solid and fluid regions.
-
-    It handles secondary fluid or solid circuits which can be coupled
-    thermally with the main fluid region. i.e radiators, etc.
+    conduction with conjugate heat transfer between solid and fluid
+    regions, including the calculation of Wigner energy release.
 
 \*---------------------------------------------------------------------------*/
 
@@ -52,6 +50,8 @@ Description
 #include "loopControl.H"
 #include "pressureControl.H"
 
+#include "wignerEnergyRelease.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
     argList::addNote
     (
         "Transient solver for buoyant, turbulent fluid flow and solid heat"
-        " conduction with conjugate heat transfer"
-        " between solid and fluid regions."
+        " conduction with conjugate heat transfer between solid and fluid"
+        " regions, including the calculation of Wigner energy release."
     );
 
     #define NO_CONTROL

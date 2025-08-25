@@ -1,0 +1,7 @@
+wignerEnergyReleaseRate/plwcDataset/pTraitsPlwcDataset.C
+wignerEnergyReleaseRate/plwcDataset/TableReadersPlwcDataset.C
+wignerEnergyReleaseRate/wignerEnergyReleaseRate.C
+wignerEnergyRelease/wignerEnergyRelease.C
+wignerEnergyReleaseData/wignerEnergyReleaseData.C
+
+LIB = $(FOAM_USER_LIBBIN)/libwignerEnergyRelease

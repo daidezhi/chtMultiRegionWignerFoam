@@ -6,6 +6,8 @@
     PtrList<volScalarField> betavSolid(solidRegions.size());
     PtrList<volSymmTensorField> aniAlphas(solidRegions.size());
 
+    PtrList<Wigner::wignerEnergyRelease> wignerEnergyReleases(solidRegions.size());
+
     // Populate solid field pointer lists
     forAll(solidRegions, i)
     {
@@ -108,4 +110,15 @@
                 )
             );
         }
+
+        wignerEnergyReleases.set
+        (
+            i,
+            new Wigner::wignerEnergyRelease(thermos[i].T(), solidRegions[i])
+        );
+
+
+        // const Wigner::wignerEnergyReleaseRate& wRate = wignerEnergyReleaseRates[i];
+
+        // Info << wRate.releaseRate(500.0, 0.0) << endl;
     }
