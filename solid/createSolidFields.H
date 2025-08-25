@@ -116,9 +116,4 @@
             i,
             new Wigner::wignerEnergyRelease(thermos[i].T(), solidRegions[i])
         );
-
-
-        // const Wigner::wignerEnergyReleaseRate& wRate = wignerEnergyReleaseRates[i];
-
-        // Info << wRate.releaseRate(500.0, 0.0) << endl;
     }

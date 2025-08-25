@@ -45,7 +45,7 @@ Foam::Wigner::wignerEnergyReleaseRate::wignerEnergyReleaseRate
         IOobject
         (
             "plwcDiscretizedDataset",
-            mesh.time().path()/"constant"/mesh.name(),
+            mesh.time().rootPath()/mesh.time().globalCaseName()/"constant"/mesh.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
